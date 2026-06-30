@@ -89,7 +89,12 @@ por mediana e intervalo interquartil (IQR), com a razão de cada abordagem em re
 
 As implementações em PolyHok (`polyhok/*.ex`) e as versões originais em CUDA que serviram de
 base às adaptações deste trabalho provêm do repositório oficial da linguagem PolyHok, de autoria
-de **André Rauber Du Bois** e **Gerson Geraldo H. Cavalheiro**:
+de **André Rauber Du Bois** e **Gerson Geraldo H. Cavalheiro**. Os *benchmarks* utilizados estão
+disponíveis em:
+
+> <https://github.com/ardubois/poly_hok/tree/teste/benchmarks>
+
+Referência:
 
 > DU BOIS, A. R.; CAVALHEIRO, G. *Polymorphic Higher-Order GPU Kernels*. In: XXIV Brazilian
 > Symposium on Programming Languages (SBLP 2025), Pelotas, RS, Brasil, 2025.
