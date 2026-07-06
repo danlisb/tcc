@@ -56,7 +56,7 @@ os caminhos no início do script refletem a máquina de testes e podem precisar 
 
 ```bash
 python3 scripts/analise_estatistica.py dados/resultados.csv
-# gera resumo_normalidade.csv, resumo_comparacoes.csv e a pasta figuras/
+# gera dados/resumo_normalidade.csv, dados/resumo_comparacoes.csv e a pasta figuras/
 ```
 
 Requisitos: `numpy`, `pandas`, `scipy`, `matplotlib`.
@@ -96,5 +96,6 @@ disponíveis em:
 
 Referência:
 
-> DU BOIS, A. R.; CAVALHEIRO, G. *Polymorphic Higher-Order GPU Kernels*. In: XXIV Brazilian
-> Symposium on Programming Languages (SBLP 2025), Pelotas, RS, Brasil, 2025.
+> DU BOIS, A. R.; CAVALHEIRO, G. G. H. *Polymorphic Higher-Order GPU Kernels*. In: Euro-Par 2025:
+> Parallel Processing. Springer, 2025. (Lecture Notes in Computer Science).
+> DOI: <https://doi.org/10.1007/978-3-031-99854-6_7>.
