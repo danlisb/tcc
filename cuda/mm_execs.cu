@@ -8,7 +8,9 @@
  * Compila: nvcc -O2 -o mm_execs mm_execs.cu -lm
  *
  * ALINHAMENTO COM O POLYHOK (referência):
- *   - Arrays float (f32) e acumulador "int sum" (gerado pelo PolyHok) — mantidos
+ *   - Arrays float (f32) e acumulador em float32 — corrigido o bug do
+ *     acumulador inteiro ("int sum") herdado da geracao de codigo do PolyHok,
+ *     que truncava os produtos parciais a cada iteracao
  *   - cudaMalloc DENTRO do timer (PolyHok cronometra os new_gnx do gpufor)  [ALTERADO]
  *   - Correção do laço de inicialização: i de 0 a m*m-1                      [ALTERADO]
  *     (o original ia de 1 a m*m: deixava a[0] sem inicializar e escrevia em
@@ -26,7 +28,7 @@
 __device__
 float anon_ajh07a72e0(float *mat1, float *mat2, int m, int x, int y)
 {
-    int sum = 0;   /* acumulador inteiro, igual ao gerado pelo PolyHok */
+    float sum = 0.0f;   /* acumulador em precisao simples (float32) — correcao do bug do acumulador inteiro */
     for (int i = 0; i < m; i += 1)
         sum = (sum + (mat1[((x * m) + i)] * mat2[((i * m) + y)]));
     return (sum);

@@ -9,9 +9,9 @@ Equivalente ao mm_execs.cu / mm.ex
 
 ALINHAMENTO COM O POLYHOK (referência):
   - Arrays float32 (PolyHok: {:f,32})
-  - ACUMULADOR INTEIRO: o PolyHok gera "int sum = 0" (visível no mm_execs.cu),
-    de modo que a soma trunca para int a cada iteração; o resultado é
-    armazenado de volta como float32. Replicado aqui com nb_int32.
+  - ACUMULADOR EM FLOAT32: corrigido o bug do acumulador inteiro ("int sum = 0")
+    herdado da geração de código do PolyHok, que truncava os produtos parciais
+    a cada iteração. A soma passa a ser acumulada em float32.
   - Alocação na GPU DENTRO do timer (PolyHok cronometra os new_gnx do gpufor).
   - SEM warmup: o JIT do kernel ocorre dentro da região cronometrada.
 """
@@ -21,7 +21,7 @@ import time
 import warnings
 import numpy as np
 from numba import cuda
-from numba import float32 as nb_float32, int32 as nb_int32
+from numba import float32 as nb_float32
 
 warnings.filterwarnings("ignore", category=Warning)
 
@@ -29,7 +29,7 @@ N_RUNS = 30
 
 
 # ---------------------------------------------------------------------------
-# Kernel — acumulador int (trunca a cada iteração), igual ao "int sum" do PolyHok
+# Kernel — acumulador em float32 (produto interno correto)
 # ---------------------------------------------------------------------------
 @cuda.jit
 def matmul_kernel(a, b, c, size):
@@ -37,11 +37,10 @@ def matmul_kernel(a, b, c, size):
     col = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
 
     if row < size and col < size:
-        acc = nb_int32(0)   # int sum = 0, igual ao PolyHok/CUDA
+        acc = nb_float32(0.0)   # acumulador em precisão simples (float32)
         for i in range(size):
-            # sum = (int)(sum + a*b): trunca o acumulado para int a cada passo
-            acc = nb_int32(nb_float32(acc) + a[row * size + i] * b[i * size + col])
-        c[row * size + col] = nb_float32(acc)   # resp[...] = (float) sum
+            acc += a[row * size + i] * b[i * size + col]
+        c[row * size + col] = acc
 
 
 # ---------------------------------------------------------------------------
